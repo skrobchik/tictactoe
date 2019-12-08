@@ -36,7 +36,7 @@ fn main() {
                 }
                 Some(to_search_player!(winning.unwrap()))
             },
-            &|n| {return 0;},
+            &|_| {return 0;},
             to_search_player!(game.get_game_turn())
         );
         println!("eval: {}", eval);
