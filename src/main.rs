@@ -5,24 +5,26 @@ mod tictactoe;
 use adversarial_search::prelude::minimax;
 use tictactoe::Coordinate;
 use tictactoe::Game;
+use tictactoe::Player;
+use tictactoe::GameOutcome;
 
 use std::io::stdin;
 
-fn is_maximizing_player(player: tictactoe::Player) -> bool {
+fn is_maximizing_player(player: Player) -> bool {
     match player {
-        tictactoe::Player::Cross => true,
-        tictactoe::Player::Circle => false,
+        Player::Cross => true,
+        Player::Circle => false,
     }
 }
 
-fn to_search_terminality(outcome: Option<tictactoe::GameOutcome>) -> Option<f32> {
+fn to_search_terminality(outcome: Option<GameOutcome>) -> Option<f32> {
     if outcome.is_none() {
         return None;
     }
     match outcome.unwrap() {
-        tictactoe::GameOutcome::CrossWin => Some(std::f32::INFINITY),
-        tictactoe::GameOutcome::CircleWin => Some(-std::f32::INFINITY),
-        tictactoe::GameOutcome::Draw => Some(0.0),
+        GameOutcome::CrossWin => Some(std::f32::INFINITY),
+        GameOutcome::CircleWin => Some(-std::f32::INFINITY),
+        GameOutcome::Draw => Some(0.0),
     }
 }
 
@@ -39,9 +41,7 @@ fn main() {
             10,
             &|n| n.get_children(),
             &|n| to_search_terminality(n.get_outcome()),
-            &|_| {
-                return 0;
-            },
+            &|_| { 0 },
             is_maximizing_player(game.get_game_turn()),
         );
         println!("eval: {}", eval);
