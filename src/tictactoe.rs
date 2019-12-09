@@ -16,29 +16,29 @@ macro_rules! return_winnable {
 macro_rules! player_to_game_outcome {
     ($x:expr) => {
         match $x {
-            Player::CROSS => GameOutcome::CROSS_WIN,
-            Player::CIRCLE => GameOutcome::CIRCLE_WIN,
+            Player::Cross => GameOutcome::CrossWin,
+            Player::Circle => GameOutcome::CircleWin,
         }
     };
 }
 
 #[derive(PartialEq, Debug, Copy, Clone)]
 pub enum TileState {
-    CROSS,
-    CIRCLE,
-    EMPTY,
+    Cross,
+    Circle,
+    Empty,
 }
 
 #[derive(Copy, Clone)]
 pub enum Player {
-    CROSS,
-    CIRCLE,
+    Cross,
+    Circle,
 }
 
 pub enum GameOutcome {
-    CROSS_WIN,
-    CIRCLE_WIN,
-    DRAW,
+    CrossWin,
+    CircleWin,
+    Draw,
 }
 
 pub struct Game {
@@ -49,8 +49,8 @@ pub struct Game {
 impl Game {
     pub fn new() -> Game {
         Game {
-            board: [[TileState::EMPTY; 3]; 3],
-            game_turn: Player::CROSS,
+            board: [[TileState::Empty; 3]; 3],
+            game_turn: Player::Cross,
         }
     }
 
@@ -65,7 +65,7 @@ impl Game {
         let mut tiles = Vec::new();
         for i in 0..3 {
             for j in 0..3 {
-                if self.board[i][j] == TileState::EMPTY {
+                if self.board[i][j] == TileState::Empty {
                     tiles.push((i, j));
                 }
             }
@@ -79,12 +79,12 @@ impl Game {
 
     pub fn make_move(&mut self, coord: Coordinate) {
         self.board[coord.0][coord.1] = match self.game_turn {
-            Player::CROSS => TileState::CROSS,
-            Player::CIRCLE => TileState::CIRCLE,
+            Player::Cross => TileState::Cross,
+            Player::Circle => TileState::Circle,
         };
         self.game_turn = match self.game_turn {
-            Player::CROSS => Player::CIRCLE,
-            Player::CIRCLE => Player::CROSS,
+            Player::Cross => Player::Circle,
+            Player::Circle => Player::Cross,
         };
     }
 
@@ -119,11 +119,11 @@ impl Game {
     }
 
     fn is_winning_line(line: Line) -> Option<Player> {
-        if line[0] == line[1] && line[1] == line[2] && line[0] != TileState::EMPTY {
+        if line[0] == line[1] && line[1] == line[2] && line[0] != TileState::Empty {
             return Some(match line[0] {
-                TileState::CROSS => Player::CROSS,
-                TileState::CIRCLE => Player::CIRCLE,
-                TileState::EMPTY => unreachable!(),
+                TileState::Cross => Player::Cross,
+                TileState::Circle => Player::Circle,
+                TileState::Empty => unreachable!(),
             });
         }
         None
@@ -143,7 +143,7 @@ impl Game {
         let mut n = 0;
         for i in 0..3 {
             for j in 0..3 {
-                if self.board[i][j] == TileState::EMPTY {
+                if self.board[i][j] == TileState::Empty {
                     n = n + 1;
                 }
             }
@@ -157,7 +157,7 @@ impl Game {
         }
         let winning = self.is_winning();
         if winning.is_none() {
-            return Some(GameOutcome::DRAW);
+            return Some(GameOutcome::Draw);
         }
         Some(player_to_game_outcome!(winning.unwrap()))
     }
@@ -169,9 +169,9 @@ impl Game {
             for j in 0..3 {
                 let tile = self.board[i][j];
                 output.push_str(match tile {
-                    TileState::EMPTY => "   ",
-                    TileState::CIRCLE => " o ",
-                    TileState::CROSS => " x ",
+                    TileState::Empty => "   ",
+                    TileState::Circle => " o ",
+                    TileState::Cross => " x ",
                 });
             }
             output.push_str(" |\n");
