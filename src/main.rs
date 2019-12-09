@@ -20,6 +20,9 @@ fn main() {
         println!("{}", game.to_string());
         let eval = evaluate_game(&game);
         println!("eval: {} | player: {:?}", eval, game.get_game_turn());
+        if game.get_outcome().is_some() {
+            break;
+        }
     }
 }
 
