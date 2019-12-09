@@ -29,7 +29,7 @@ pub enum TileState {
     Empty,
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub enum Player {
     Cross,
     Circle,
@@ -149,14 +149,18 @@ impl Game {
     }
 
     pub fn get_outcome(&self) -> Option<GameOutcome> {
-        if self.count_empty_tiles() != 0 {
-            return None;
-        }
         let winning = self.is_winning();
         if winning.is_none() {
-            return Some(GameOutcome::Draw);
+            if self.count_empty_tiles() == 0 {
+                Some(GameOutcome::Draw)
+            }
+            else {
+                None
+            }
         }
-        Some(player_to_game_outcome!(winning.unwrap()))
+        else {
+            Some(player_to_game_outcome!(winning.unwrap()))
+        }
     }
 
     pub fn to_string(&self) -> String {

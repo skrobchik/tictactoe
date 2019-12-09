@@ -10,6 +10,30 @@ use tictactoe::GameOutcome;
 
 use std::io::stdin;
 
+fn main() {
+    let mut game: Game = Game::new();
+    println!("{}", game.to_string());
+    
+    for _ in 0..9 {
+        let move_coordinate = prompt_move(&game);
+        game.make_move(move_coordinate);
+        println!("{}", game.to_string());
+        let eval = evaluate_game(&game);
+        println!("eval: {} | player: {:?}", eval, game.get_game_turn());
+    }
+}
+
+fn evaluate_game(game: &Game) -> f32 {
+    minimax(
+        game,
+        10,
+        &|n| n.get_children(),
+        &|n| to_search_terminality(n.get_outcome()),
+        &|_| { 0 },
+        is_maximizing_player(game.get_game_turn()),
+    )
+}
+
 fn is_maximizing_player(player: Player) -> bool {
     match player {
         Player::Cross => true,
@@ -25,26 +49,6 @@ fn to_search_terminality(outcome: Option<GameOutcome>) -> Option<f32> {
         GameOutcome::CrossWin => Some(std::f32::INFINITY),
         GameOutcome::CircleWin => Some(-std::f32::INFINITY),
         GameOutcome::Draw => Some(0.0),
-    }
-}
-
-fn main() {
-    let mut game: Game = Game::new();
-    println!("{}", game.to_string());
-
-    for _ in 0..9 {
-        let move_coordinate = prompt_move(&game);
-        game.make_move(move_coordinate);
-        println!("{}", game.to_string());
-        let eval = minimax(
-            &game,
-            10,
-            &|n| n.get_children(),
-            &|n| to_search_terminality(n.get_outcome()),
-            &|_| { 0 },
-            is_maximizing_player(game.get_game_turn()),
-        );
-        println!("eval: {}", eval);
     }
 }
 
