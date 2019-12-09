@@ -98,9 +98,6 @@ impl Game {
         }
         children
     }
-    pub fn get_board(&self) -> Board {
-        self.board
-    }
 
     fn get_row(&self, i: usize) -> Line {
         [self.board[i][0], self.board[i][1], self.board[i][2]]
